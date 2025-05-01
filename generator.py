@@ -1,7 +1,7 @@
 import random
 import matplotlib.pyplot as plt
-from NonogramSolver.extract import image_to_nonogram
-from NonogramSolver.solver import NonogramSolver
+from .extract import image_to_nonogram
+from .solver import NonogramSolver
 
 
 class Nonogram:
