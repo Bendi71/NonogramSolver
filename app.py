@@ -29,13 +29,6 @@ CORS(app)  # Enable CORS for all routes
 
 # Configure Flask to use our custom JSON encoder
 app.json_encoder = NumpyEncoder
-
-# Create upload folder if it doesn't exist
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
 # Store active nonograms in memory
