@@ -20,8 +20,9 @@ class NumpyEncoder(json.JSONEncoder):
             return bool(obj)
         return super().default(obj)
 
-from .generator import Nonogram
-from .solver import NonogramSolver
+# Change relative imports to absolute imports for production deployment
+from generator import Nonogram
+from solver import NonogramSolver
 
 app = Flask(__name__)
 CORS(app)
