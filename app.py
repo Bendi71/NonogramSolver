@@ -26,17 +26,31 @@ from .solver import NonogramSolver
 app = Flask(__name__)
 CORS(app)
 
-# Configure Flask to use our custom JSON encoder
 app.json_encoder = NumpyEncoder
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+# Use environment variable for upload folder to support different deployment environments
+UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads'))
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))
 
 active_nonograms = {}
+
+# Add a route to help identify the API and provide basic information
+@app.route('/')
+def index():
+    return jsonify({
+        'name': 'NonogramSolver API',
+        'status': 'online',
+        'endpoints': {
+            '/upload': 'POST - Upload an image and convert to nonogram',
+            '/solve/<nonogram_id>': 'POST - Start solving a nonogram',
+            '/next-iteration/<nonogram_id>': 'GET - Get the next iteration in solving process',
+            '/completed-solution/<nonogram_id>': 'GET - Get the complete solution',
+            '/clean/<nonogram_id>': 'DELETE - Clean up resources'
+        }
+    })
 
 def array_to_base64_img(array):
     plt.figure(figsize=(8, 8))
